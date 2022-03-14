@@ -19,7 +19,8 @@ let completeListArray = [];
 let onHoldListArray = [];
 
 // Drag Functionality
-
+let draggedItem;
+let currentColumn;
 
 // Get Arrays from localStorage if available, set default values if not
 function getSavedColumns() {
@@ -54,6 +55,8 @@ function createItemEl(columnEl, column, item, index) {
   const listEl = document.createElement('li');
   listEl.classList.add('drag-item');
   listEl.textContent = item;
+  listEl.draggable = true;
+  listEl.setAttribute('ondragstart', 'drag(event)'); 
   //Append
   columnEl.appendChild(listEl);
 
@@ -89,6 +92,33 @@ function updateDOM() {
 
 
 }
+
+// Function which recognizes when you start dragging elems
+function drag(e){
+  draggedItem = e.target;
+}
+
+// Function allowing items to be dropped
+function allowDrop(e){
+  e.preventDefault();
+}
+
+function drop(e){
+  e.preventDefault();
+  //Removing extra padding and backgroud color
+  itemLists.forEach((column) => {
+    column.classList.remove('over');
+  }); 
+  // Adding item to the column
+  const parent = itemLists[currentColumn];
+  parent.appendChild(draggedItem); 
+}
+
+// Function which detects when dragged items enters col area
+function dragEnter(column){
+  itemLists[column].classList.add('over');
+  currentColumn = column;
+} 
 
 // On Load
 updateDOM();

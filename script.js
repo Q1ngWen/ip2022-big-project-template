@@ -17,6 +17,7 @@ let backlogListArray = [];
 let progressListArray = [];
 let completeListArray = [];
 let onHoldListArray = [];
+let listArrays = [];
 
 // Drag Functionality
 let draggedItem;
@@ -39,6 +40,7 @@ function getSavedColumns() {
 
 // Set localStorage Arrays
 function updateSavedColumns() {
+  listArrays = [backlogListArray, progressListArray, completeListArray, onHoldListArray];
   localStorage.setItem('backlogItems', JSON.stringify(backlogListArray));
   localStorage.setItem('progressItems', JSON.stringify(progressListArray));
   localStorage.setItem('completeItems', JSON.stringify(completeListArray));
@@ -92,6 +94,30 @@ function updateDOM() {
   updateOnLoad = true;
   updateSavedColumns();
 
+}
+
+// Add to Column List, Reset TextBox
+function addToColumn(column){
+  const itemText = addItems[column].textContent;
+  const selectedArray = listArrays[column];
+  selectedArray.push(itemText);
+  addItems[column].textContent = '';
+  updateDOM();
+}
+
+// Show Add Item Input Box
+function showInputBox(column){
+  addBtns[column].style.visibility = 'hidden';
+  saveItemBtns[column].style.display = 'flex';
+  addItemContainers[column].style.display = 'flex';
+}
+
+// Hide Item Input Box
+function hideInputBox(column){
+  addBtns[column].style.visibility = 'visible';
+  saveItemBtns[column].style.display = 'none';
+  addItemContainers[column].style.display = 'none';
+  addToColumn(column);
 }
 
 // Allow arrays to reflect Dragged and Dropped Items
